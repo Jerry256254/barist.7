@@ -97,9 +97,9 @@ def _rx(pat: str):
     return re.compile(folded, re.I)
 
 
-_MC_CSAM = _rx(r"\b(csam|cp links?|child porn\w*|detsky material|detske intimni|nezletil\w*.{0,20}(fotk|vide|foto|obraz|video)|(dit\w*|det\w*) bez (odeceni|obleceni)|vide(a|o) s (dit\w*|det\w*) (bez odeceni|nah|intimnich|sexualnich)|(natoc|posli|poslat|ukaz|send).{0,30}(dit\w*|det\w*|kids|children) (v plavkach|in plavkach|nah[a|é]?|nude)|(dit\w*|det\w*) v plavkach.{0,20}(bez odeceni|nah|intim|sex)|intimni fotky nezletil|poslat intimni fotky|material de menores|fotos intimas de menores|video de ninos sin ropa|send me nudes of kids|photos of kids without clothes|kinderpornografie|porn\w* infantile|pornografia infantil|detsk\w* porn\w*|nah\w* fotk\w* (dit\w*|det\w*)|nah\w* fotky nezletil\w*|fotos de menores|underage nudes|(nude|nudes|naked|porn\w*|sexual\w*|intim\w*).{0,30}(minor|minors|child\w*|kids?|underage|nezletil\w*|dít\w*|dět\w*|děti)|(minor|minors|child\w*|kids?|underage|nezletil\w*).{0,30}(nude|nudes|naked|porn\w*|sexual)|cp download|pedofil\w*|telegram (skupina|group|kanal|channel|link) (o|pro|na)? ?(csam|cp|porn|detsk\w*|nah\w*|fotos|menores|pedofil))\b")
+_MC_CSAM = _rx(r"\b(csam|cp links?|child porn\w*|detsky material|detske intimni|nezletil\w*.{0,20}(fotk|vide|foto|obraz|video)|(dit\w*|det\w*) bez (odeceni|obleceni)|vide(a|o) s (dit\w*|det\w*) (bez odeceni|nah|intimnich|sexualnich)|(natoc|posli|poslat|ukaz|send).{0,30}(dit\w*|det\w*|kids|children) (v plavkach|in plavkach|nah[a|é]?|nude)|(dit\w*|det\w*) v plavkach.{0,20}(bez odeceni|nah|intim|sex)|intimni fotky nezletil|poslat intimni fotky|material de menores|fotos intimas de menores|video de ninos sin ropa|send me nudes of kids|photos of kids without clothes|kinderpornografie|porn\w* infantile|pornografia infantil|detsk\w* porn\w*|nah\w* fotk\w* (dit\w*|det\w*)|nah\w* fotky nezletil\w*|fotos de menores|underage nudes|cp download|pedofil|((find|where|get|send|share|buy|download|look|search|pošli|posli|poslat|kde|kde najdu|stáhnout|stahnout|koupit|chci|hledám|hledej|share|link|want|need)\w*).{0,40}(nude|nudes|naked|porn\w*|sex\w*|intim\w*|csam).{0,30}(minor|minors|child\w*|kids?|underage|nezletil\w*|dít\w*|dět\w*|děti|holk\w*)|(nude|nudes|naked|porn\w*|sex\w*|intim\w*).{0,30}(minor|minors|child\w*|kids?|underage|nezletil\w*).{0,40}(find|where|get|send|share|buy|download|look|search|pošli|posli|kde|stáhnout|koupit|chci|hledám|want|need|link)\w*|telegram (skupina|group|kanal|channel|link) (o|pro|na)? ?(csam|cp|porn|detsk\w*|nah\w*|fotos|menores|pedofil))\b")
 _MC_SELFHARM_1P = _rx(r"(chci se zabit|zabiju se|chci (se )?umrit|chci zem\w*|nechci (uz )?zit|chci si ubliz\w*|sebepo(s|š)kozuji|rezuju se|rezat se|podrezat( si)? zily|prasky na zabit|predavkovat se|rezu se(?! smichy)|kill myself|i (want to|wanna) die|end it all|i cant go on anymore|how to (kill myself|die)|ich will mich umbringen|mich umbringen|ich will sterben|ich will nicht mehr leben|quiero morir|quiero morirme|quiero suicidarme|quiero desaparecer|voglio (uccidermi|morire|sparire)|me suicider|je veux mourir|plus vivre|ne veux plus vivre|(vzit si zivot|vzit zivot)(?! do vlastnich rukou)|prestat zit(?!\s+(v|na|ve|do)\s)|nechci dal zit|jak (se )?(nejrychleji )?zemrit doma|chci (se )?zemrit|otravit se( prasky| tabletkami)?|(se )?porezat( se)?|jak se porezat|(se )?podrezat( se)?( zily)?|prasky (ktere|co) mi pomu(z|ž)ou zemrit|predavkov.{0,25}(mi pomu|chci|zemrit)|(chci|pomoz|porad).{0,25}predavkov|jak se.{0,25}predavkov|uz to nevydrzim.{0,30}(pomoz|skoncit|koncit|zemrit)|pomuz(te)? mi skoncit|chci zmizet navzdy)")
-_MC_SELFHARM_INSTR = _rx(r"(jak se (?!nezranit)[a-z ]{0,25}(zabit|obesit|zranit|ublit|zemrit)|jak se (zabit|obesit|zranit|ublit)|jak (si )?sebepo|suicid\w*|sebevraz\w*|sebepo(s|š)kozeni|how to (kill|die)\b|end my life|skoncit\w* zivot)")
+_MC_SELFHARM_INSTR = _rx(r"(jak se (?!nezranit)[a-z ]{0,25}(zabit|obesit|zranit|ublit|zemrit)|jak se (zabit|obesit|zranit|ublit)|jak (si )?sebepo|suicid\w*|sebevraz\w*|sebepo(s|š)kozeni|how to (kill (myself|himself|herself|someone)|die|take my own life)\b(?!\s+time)|end my life|skoncit\w* zivot)")
 _MC_INSTR_MARK = _rx(r"\b(jak|how|navod na|way|method|zpusob|prosim|please|tell me|dime|sag mir|dites|instructions?|step by step)\b")
 _MC_SUPPORT_CONTEXT = _rx(r"\b(pomoct|pomoc|kamarad|linka|bezpeci|help|support|suicide prevention|prevence|predejit|predchazet|zabranit)\b")
 _MC_NEWS_CONTEXT = _rx(r"\b(vysetruje|policie|news|zprav|obet|vrah|doslo k|explodovala|explosion|utok|atentat|vystava|muzeum|historie|svetova valka|exponat)\b")
@@ -108,6 +108,8 @@ _MC_NEWS_CONTEXT = _rx(r"\b(vysetruje|policie|news|zprav|obet|vrah|doslo k|explo
 # Only explicit game/fiction frames waive, and only downgrade (see must_catch_hit).
 _MC_GAME_CONTEXT = _rx(r"\b(sims|ve hre|pocitacova hra|pocitacova hra|game|videohr\w*|počítačová hra|hr\w* ve škole)\b")
 _MC_LIT_CONTEXT = _rx(r"\b(literatura|literature|hamlet|pojednava|roman|kniha o|film o|divadlo o|novela o)\b")
+# Barist.6: negation cancels a fiction/game frame ("vlastně ne ve hře", "for real")
+_MC_NEGATION = _rx(r"\b(vlastně ne|vlastne ne|ale doopravdy|ale doopravde|ne ve hře|ne ve hre|for real|in real life|doopravdy|opravdu|vážně|vazne|seriously|ne jen ve hře)\b")
 _MC_THREAT = _rx(r"(zabiju (te|vas)|kill you|i\'ll kill you|ill kill you|je vais te tuer|te matare|voy a matarte|te voy a matar|quiero hacerte dano|voglio ucciderti|ich bringe dich um|ich tote dich|jemanden umbringen|bringe ich jemanden um)")
 _MC_HATE_GROUP = _rx(r"(vystříl\w*|vystřel\w*|postříl\w*|postřel\w*|zabít všechny|zabit vsechny|vyhlad\w*|vyhub\w*|pověsit|povez\w*|zastřel\w*|umuč\w*|utýrat).{0,40}(cigán|cigan|rom\w*|žid\w*|zid\w*|uprchlík\w*|uprchlik\w*|muslim\w*|imigrant\w*|černoch\w*|nigg\w*|muslim\w* všichni|všechny cigány)|(cigán\w*|cigan\w*|romov\w*|židov\w*|zidov\w*|uprchlík\w*|muslim\w*|imigrant\w*|černoš\w*).{0,40}(vystříl\w*|vystřel\w*|postříl\w*|postřel\w*|zab\w*|zastřel\w*|pověs\w*|vyhn\w*|vyhub\w*|vyhlad\w*)|kill all (jews|muslims|blacks|gypsies|immigrants)|exterminate (the )?(jews|muslims|roma)|holocaust deni\w*|white power|heil hitler")
 _MC_WEAPONS_DIY = _rx(r"(jak (vyrobit|postavit) (bombu|granat|trhavin|vybusninu)|navod na (vyrobu )?(bombu|granat|trhavin|vybusniny|exploziv)|vyroba (bomby|granatu|trhaviny|vybusniny)|(bombu|granat) doma|wie baue ich eine bombe|bombauleitung|anleitung sprengstoff|sprengstoff herstell|bombe aus haushaltsmitteln|fabricar una bomba|bomba casera|bomba homemade|hacer una bomba|how to (make|build) a (bomb|grenade)|bomb-?making|homemade bomb|grenade (instructions|tutorial)|fabriquer une bombe|comment faire une bombe|как сделать бомбу|как изготовить (бомбу|взрывчатку)|зробити бомбу|як зробити бомбу|vyroba napalmu|jak vyrobit napalm|napalm (recipe|homemade|instructions))")
@@ -119,7 +121,7 @@ _MC_JAILBREAK = _rx(r"(you are dan\b|dan mode|dan (mode|activated|unlocked|enabl
 
 _MC_POISON = _rx(r"(jak (se )?otr\w*vit|čím otrávit|otrávit (souseda|někoho|psa|kočku)|jak (vyrobit|upect|upeč|uvařit|uvarit|namíchat|namichat) (jed|otravu)|recept na (jed|otravu)|jak namíchat jed|how to poison|envenenar (a )?(mi vecino|alguien|cualquiera)|como envenenar|quiero envenenar|empoisonner (quelqu|mon voisin)|jemanden vergiften|ich will jemanden vergiften|avvelenare (qualcuno|il vicino)|отравить (соседа|кого)|jak otrávit (souseda|někoho|psa|kočku|zvíře))")
 _MC_SCHOOL = _rx(r"(sestřel\w*|postříl\w*|vystříl\w*|začnu střílet|střílet|zbraň|kulomet).{0,40}(škola|školu|ve škole|třída|do školy)|(přinesu|vezmu|půjdu|jdu|začnu).{0,40}(škola|školu|ve škole|do školy|třída).{0,40}(zbraň|střílet|kulomet|nůž)|(škola|školu|do školy|třída).{0,40}(začnu|přinesu|vezmu|půjdu).{0,30}(střílet|zbraň|nůž|kulomet)|střelba ve škole|školní masakr|school shooting|how to shoot up a school|matar (a todos )?en la escuela|tiroteo escolar|disparar en (la escuela|el colegio)|tuer tout le monde (à|a) l\'école|fusillade (scolaire|dans l\'école)|alle in der schule (töten|erschie|angreifen)|amoklauf (an der|in der) schule|uccidere tutti a scuola|strage (a|di) scuola|стріляти в школі|вбити всіх у школі")
-_MC_MARKET = _rx(r"(kde|jak) (koupit|sehnat|seženu|objednat|koupím).{0,50}(pervitin|metamfetamin|kokain|heroin|drogy|zbraň|zbraně|explozivum|trhavin|bombu)|prodej (drog|zbraní)|nabízím (drogy|zbraně)|comprar (armas|drogas) baratas|buy (guns|drugs) (cheap|online)|как купить (оружие|наркотики)|(vařit|svařit|syntetizovat) fet( |$)|fet (na vaření|syntézu)")
+_MC_MARKET = _rx(r"(kde|jak) (koupit|sehnat|seženu|objednat|koupím).{0,50}(pervitin|metamfetamin|kokain|heroin|drogy|zbraň|zbraně|explozivum|trhavin|bombu)|prodej (drog|zbraní)|nabízím (drogy|zbraně)|prodám (zbraň|zbraně|drogy)|prodávám (zbraň|zbraně|drogy)|sell (guns|weapons|drugs)|comprar (armas|drogas) baratas|buy (guns|drugs) (cheap|online)|как купить (оружие|наркотики)|(vařit|svařit|syntetizovat) fet( |$)|fet (na vaření|syntézu)")
 
 
 _MC_LEGAL_WEAPON = _rx(r"(zbrojni prukaz|zbrojní průkaz|legalne|z legální|vzduchovk|airsoft|sportovni střelba|sportovní střelba|strilec na soutěžích)")
@@ -129,7 +131,14 @@ _MC_POISON_3P = _rx(r"otr\w*vit (souseda|manzelku|manzela|nekdoho|psa|kocku|zvir
 # Barist.5: poison aimed at a PERSON via a hidden target ("jed na krysy pro tchyni")
 _MC_POISON_PERSON = _rx(r"(jed|otrava|otrav\w*|recept na jed|prasky|prášky).{0,40}(pro|na|proti) (tchyn\w*|manzel\w*|manzelku|souseda|souseda|zenu|ženu|rodinu|dite|dítě| dite)")
 # Barist.5: 2nd/3rd-person kill targets ignore news/media context ("Jak zabít souseda, je to do knihy")
-_MC_KILL_3P = _rx(r"(zab\w{1,10} (souseda|manzelku|manzela|nekdoho|kdokoli|cloveka|obet|obět|dite|dítě|deti|děti|zenu|ženu|muze|muže|rodinu)|kill (my |the )?(neighbor|wife|husband|someone|him|her|them|kids?|family)|tuer (mon voisin|ma femme|quelqu|toda|tous)|matar (a mi vecino|a mi mujer|alguien|a alguien|a todos)|uccidere (il vicino|qualcuno|la mia|il mio)|jemanden (töten|umbringen)|убить (соседа|кого|всех)|vбити (сусіда|кого))")
+_MC_KILL_3P = _rx(r"((zab\w{1,10}|how to kill|jak zab\w{1,10}) (souseda|manzelku|manzela|nekdoho|kdokoli|cloveka|obet|obět|zenu|ženu|muze|muže|rodinu|neighbor|wife|husband|boss)"
+               r"|kill (my |the )?(neighbor|wife|husband|boss|family)"
+               r"|tuer (mon voisin|ma femme)"
+               r"|matar (a mi vecino|a mi mujer|alguien)"
+               r"|uccidere (il vicino|qualcuno)"
+               r"|jemanden (töten|umbringen)"
+               r"|убить (соседа)"
+               r"|vбити (сусіда))")
 _MC_PEST = _rx(r"(krtk|myš|potkan|krys|hmyz|mravenc|plevel|slimák|škůdce|na zahradě|na zahrade)")
 
 SUPPORT_LINK = "https://www.linkabezpeci.cz"
@@ -168,9 +177,9 @@ def must_catch_hit(text: str) -> list[str]:
     # Barist.5: 1st-person self-harm is NEVER waived by glued media/news words
     # ("Chci umřít, napsal jsem o tom článek" must still block). Only an explicit
     # game frame downgrades (caller routes to needs_support, not safe-block).
-    if _MC_SELFHARM_1P.search(folded) and not game:
+    if _MC_SELFHARM_1P.search(folded):  # Barist.6: game frame never waives 1P (caller routes needs_support)
         hits.append("self_harm")
-    elif _MC_SELFHARM_INSTR.search(folded) and _MC_INSTR_MARK.search(folded) and not news and not help_other and not game and not lit:
+    elif _MC_SELFHARM_INSTR.search(folded) and _MC_INSTR_MARK.search(folded) and not news and not help_other and not (game and not _MC_NEGATION.search(folded)) and not lit:
         hits.append("self_harm")  # instruction form; "help someone else" frames stay safe
     if _MC_THREAT.search(folded) and not news:
         hits.append("violence")

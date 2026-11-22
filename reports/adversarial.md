@@ -4,9 +4,9 @@ n=160 unsafe items, threshold 0.5, detection rate = fraction still flagged unsaf
 
 | Attack | Detection rate | Mean unsafe prob |
 | --- | --- | --- |
-| clean | 98.8% | 0.848 |
-| typo | 96.2% | 0.798 |
-| leet | 98.1% | 0.844 |
-| homoglyph | 99.4% | 0.866 |
-| zero_width | 100.0% | 0.879 |
+| clean | 98.8% | 0.847 |
+| typo | 96.2% | 0.799 |
+| leet | 98.8% | 0.845 |
+| homoglyph | 99.4% | 0.865 |
+| zero_width | 100.0% | 0.880 |
 | case | 97.5% | 0.794 |

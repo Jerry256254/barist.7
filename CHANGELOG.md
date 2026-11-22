@@ -1,3 +1,13 @@
+## Barist.6 — ninth adversarial review (checkpoint `checkpoints_b6b/best.pt`)
+
+- CSAM regex narrowed to acquisition actions (education/hygiene/parenting frames can never match); kill regex restricted to specific persons, idioms removed. Regex gate: 518 benign, 0 hard FP, 0 misses; full-pipeline gate (GATE_MODEL_DIR) 0 override FP.
+- Game-frame bypass closed: 1P self-harm never waived by game frame (needs_support at most); negation (vlastně ne/doopravdy/for real) cancels fiction frames for instruction forms.
+- heldout2 unsafe rows now carry a `category` column -> cat_recall gates measurable (still 0.0, block stays OFF). New `identity_recall` gate (24 hate rows, min 0.9): Barist.6 = 0.625 FAIL, published.
+- Data round 4 (local templates, +170 rows): identity hate/neutral pairs, illegal-weapons market phrases, game-negation self-harm, the review's benign FP + education/idiom sentences. Train 267 982 rows, purged vs heldout2+3+dev (0.714).
+- Training: 6a -> 6b from b5c, best val F1 0.8249 (b6b). Gates: heldout2 +prefilter 67/75 PASS, heldout3 model 33/50 PASS (> c9 32), +prefilter 36/50 PASS, precision 0.853 PASS, ECE PASS, ONNX 0.0 PASS, dedup PASS. FAIL documented: heldout2 model-only 51/75, cs 6.5 %, user_benign 14/43, identity_fp 0.227, identity_recall 0.625, cat_recall 0.0, test F1 0.822.
+- Architecture decision: stay at 903K params; regex layer carries must-catch classes.
+- Own repos: Jerry256254/barist.6 + KucLab/Barist.6, git tag barist-6.
+
 ## Barist.5 — eighth adversarial review (checkpoint `checkpoints_b5c/best.pt`)
 
 - Category hard block DISABLED (`category_block: false` in config) — the head is reported, not trusted; new gates `cat_recall_sexual_abuse` / `cat_recall_self_harm` (min 0.8 on heldout2) currently FAIL at 0.0 and are published honestly. Block re-enables only when they pass.

@@ -1,4 +1,4 @@
-"""Batch classification API for the Barist.5 Hub bundle (stdlib only, no FastAPI).
+"""Batch classification API for the Barist.6 Hub bundle (stdlib only, no FastAPI).
 
     python serve.py --port 8000                   # serves the local HF bundle dir (run from the bundle root)
     CENSER_DIR=/path/to/bundle python scripts/serve.py
@@ -113,7 +113,7 @@ def main() -> None:
     pipe = CenserPipeline(args.dir, device=args.device)
     limiter = RateLimiter(float(os.environ.get("RATE_LIMIT_PER_MIN", "600")))
     server = ThreadingHTTPServer((args.host, args.port), make_handler(pipe, limiter, args.dir))
-    print(f"barist.5 serve: model={args.dir} device={pipe.device} on http://{args.host}:{args.port}")
+    print(f"barist.6 serve: model={args.dir} device={pipe.device} on http://{args.host}:{args.port}")
     print("  POST /classify {\"texts\": [...]}   POST /classify-one {\"text\": ...}   GET /health")
     server.serve_forever()
 

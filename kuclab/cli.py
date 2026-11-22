@@ -20,13 +20,13 @@ from .langdetect import detect_lang, must_catch_hit, review_hit, is_support_cont
 
 
 
-BANNER = "Barist.5 - napis text, Enter. 'exit' pro konec."
+BANNER = "Barist.6 - napis text, Enter. 'exit' pro konec."
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="barist.5",
-        description="Barist.5: tiny multilingual safety classifier. Prints safe or unsafe.",
+        prog="barist.6",
+        description="Barist.6: tiny multilingual safety classifier. Prints safe or unsafe.",
     )
     parser.add_argument("text", nargs="*", help="text to classify; omit to read stdin or use --repl")
     parser.add_argument("--checkpoint", default="checkpoints/best.pt")
@@ -63,7 +63,7 @@ def _color(text: str, code: str) -> str:
 class HubClassifier:
     """The published model from the Hub, loaded with plain transformers."""
 
-    def __init__(self, repo: str = "KucLab/Barist.5", device: str | None = None) -> None:
+    def __init__(self, repo: str = "KucLab/Barist.6", device: str | None = None) -> None:
         import torch
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
@@ -92,7 +92,7 @@ class HubClassifier:
         thr = float(lang_thr.get(lang, lang_thr.get("default", 0.5)))
         label = "unsafe" if p >= thr else "safe"
         cats = []
-        hit = must_catch_hit(text)  # Barist.5 hard pre-filter
+        hit = must_catch_hit(text)  # Barist.6 hard pre-filter
         if hit:
             label = "unsafe"
         help_ctx = is_support_context(text)
@@ -102,7 +102,7 @@ class HubClassifier:
             id2label = self.model.config.id2label
             cat_thr = getattr(self.model.config, "cat_thresholds", None) or {}
             cat_exp = set(getattr(self.model.config, "cat_experimental", []) or [])
-        cat_block_enabled = bool(getattr(self.model.config, "category_block", False))  # Barist.5: default OFF until head gate
+        cat_block_enabled = bool(getattr(self.model.config, "category_block", False))  # Barist.6: default OFF until head gate
         if n_labels > 2:
             if cat_block_enabled and not help_ctx:  # hard block only when head gate passed; help-other never blocked
                 for i in range(2, n_labels):
@@ -137,7 +137,7 @@ class HubClassifier:
 
 def run_ui(predict, source: str) -> int:
     """Small interactive terminal UI: phrase in, safe/unsafe + score out."""
-    print(f"Barist.5 - interactive terminal UI  [{source}]")
+    print(f"Barist.6 - interactive terminal UI  [{source}]")
     print("Type a phrase, Enter to classify. 'exit' to quit.\n")
     while True:
         try:
@@ -163,14 +163,14 @@ def run_ui(predict, source: str) -> int:
 
 
 def ui_main(argv: list[str] | None = None) -> int:
-    """Entry point for the `barist.5` command."""
+    """Entry point for the `barist.6` command."""
     parser = argparse.ArgumentParser(
-        prog="barist.5",
-        description="Barist.5 terminal UI: classify text as safe/unsafe (+ categories). "
+        prog="barist.6",
+        description="Barist.6 terminal UI: classify text as safe/unsafe (+ categories). "
         "Run without arguments for the interactive UI.",
     )
     parser.add_argument("text", nargs="*", help="phrase to classify once; omit to open the interactive UI")
-    parser.add_argument("--repo", default="KucLab/Barist.5", help="Hub repo id of the model")
+    parser.add_argument("--repo", default="KucLab/Barist.6", help="Hub repo id of the model")
     parser.add_argument("--checkpoint", default=None, help="use a local training checkpoint instead of the Hub model")
     parser.add_argument("--device", default=None, help="cuda / cpu (default: auto)")
     parser.add_argument("--json", action="store_true", help="one-shot JSON output")

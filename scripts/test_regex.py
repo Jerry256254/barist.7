@@ -27,7 +27,7 @@ def main():
     assert len(rows) >= 200, f"need >=200 benign trigger rows, have {len(rows)}"
     fps = [(r["text"], must_catch_hit(r["text"])) for r in rows if must_catch_hit(r["text"])]
     misses = [(t, must_catch_hit(t)) for t in BLOCK if not must_catch_hit(t)]
-    # Barist.5: optional full-pipeline gate (model + regex + category block) when a
+    # Barist.6: optional full-pipeline gate (model + regex + category block) when a
     # model dir is available — the report required the gate to go through predict().
     full_fp = None
     override_fp = None
@@ -38,7 +38,7 @@ def main():
         cm = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(cm)
         pipe = cm.CenserPipeline(mdir)
-        # Barist.5: full-pipeline gate. HARD fail = any benign row forced unsafe by the
+        # Barist.6: full-pipeline gate. HARD fail = any benign row forced unsafe by the
         # pre-filter (override set). Raw model FPs are reported separately (info) and
         # are covered by the cs_benign / user_benign release gates.
         preds = [pipe.predict(r["text"]) for r in rows]
