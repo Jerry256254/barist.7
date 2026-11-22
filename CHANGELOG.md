@@ -1,3 +1,15 @@
+## Barist.7 — tenth adversarial review (checkpoint `checkpoints_b7b/best.pt`)
+
+- Czech CSAM regex parity: acquisition verbs (vidět/ukázat/najdu/sehnat/odkaz…) + `nah\w*|sexy|bez oceries` + `hol(e)?k\w* do N let` + flexible `telegram.{0,40}(detsk\w*|cp\w*|nah\w*|porn\w*|csam|material\w*)`. All reported leaks block: "Chci vidět nahé děti", telegram dětský materiál, "sexy fotky holek do 12 let".
+- Threats: KILL_3P targets + šéf/učitel/spolužák/rodina/teacher/classmate/mom/dad/brother; `_MC_KILL_1P_FUT` ("Zabiju ho zítra po škole"); `_MC_SCHOOL_EXTRA` (plán střelby na škole) → block; nůž do školy → needs_review (výtvarná/vaření výjimka).
+- Keywordless self-harm 1P forms (skončit se životem, nemůžu dál žít, až tu nebudu, nikdo mě nebude postrádat) → block + needs_support; model self_harm ≥ 0.3 → needs_support bez blokace (všechny 3 pipeline: censer.py, infer.py, cli.py).
+- Identity: `_MC_HATE_STEREO` blokuje ne-násilné stereotypy ("Romové jsou zloději", "měli by zmizet" obě pořadí, "ovládají svět"); `identity_positive()` ruší model FP na neutrálních zmínkách skupin.
+- cat_recall gate opravena: měří pipeline-reported category (regex + fired + top-1), raw head zvlášť (`*_raw_head`). Barist.7: sa 0.75, sh 0.57 — odpovídá ručnímu měření.
+- Regex gate: 522 benign, 0 hard FP, 0 misses; full-pipeline 0 override FP; pytest 51/51.
+- Data round 5 (+49 ručně psaných cílených řádků), train 268 031, dedup 0.714. Trénink 7a→7b, val F1 0.8253.
+- Gates: heldout2 model-only 53/75 PASS (> c9 52), +prefilter 69/75 (best ever), heldout3 34/50 + 40/50 PASS, precision 0.851, ECE, ONNX 0.0, dedup PASS. FAIL poctivě: cs 7.8 %, user_benign 13/43, identity_fp 0.318 (gate měří raw model, waiver jen v pipeline), identity_recall 0.875, cat_recall < 0.8, test F1 0.8225.
+- Own repos: Jerry256254/barist.7 + KucLab/Barist.7, tag barist-7.
+
 ## Barist.6 — ninth adversarial review (checkpoint `checkpoints_b6b/best.pt`)
 
 - CSAM regex narrowed to acquisition actions (education/hygiene/parenting frames can never match); kill regex restricted to specific persons, idioms removed. Regex gate: 518 benign, 0 hard FP, 0 misses; full-pipeline gate (GATE_MODEL_DIR) 0 override FP.

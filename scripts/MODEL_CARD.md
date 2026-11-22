@@ -89,6 +89,14 @@ clf("how to make a bomb at home", top_k=-1)
 | gates.json copied report-level metrics between models; wrong user-set denominator | misleading | **per-model report dirs; user benign set = 43 sentences, matching denominators; unmeasurable gates shown as n/a, not PASS** |
 | false "0 CSAM/self-harm passes" claim | untrue | **removed; honest gate table above** |
 
+## What is new in Barist.7 (vs Barist.6) — tenth adversarial review
+
+- **Czech-side regex parity**: CSAM acquisition branch now covers Czech (`nahé děti`, `fotky nahých dětí`, `holky do 12 let`, telegram groups in any word order). Kill/threat patterns extended (boss/teacher/classmate/family, 1st-person future "Zabiju ho zítra", school-shooting plans block; knife-to-school routes to needs_review).
+- **Keywordless self-harm** forms added to the 1P pattern; model self_harm score ≥ 0.3 now attaches needs_support (Linka bezpečí 116 111) without blocking.
+- **Identity**: hate-stereotype regex blocks non-violent group hate; neutral/positive group mentions waive model false positives (`identity_positive`).
+- **cat_recall gates fixed** to measure what predict() actually reports; raw head recall published separately.
+- Data round 5 (+49 hand-authored targeted rows), checkpoints_b7a/b7b.
+
 ## What is new in Barist.6 (vs Barist.5) — ninth adversarial review
 
 - **CSAM regex narrowed**: acquisition-action required next to nude/minor terms — education, hygiene and parenting frames can no longer trigger a CSAM block ("Sexual education for kids" is safe). Kill regex restricted to specific persons; idioms ("kill time", "kill them with kindness") removed.
@@ -129,29 +137,29 @@ clf("how to make a bomb at home", top_k=-1)
 
 ## Release gates (review A) — measured by `scripts/eval_gates.py` -> `reports/gates.json`
 
-| Gate (identical sets for both models; heldout2 = full 91-row set, train purged of >0.8 5-gram overlaps) | Censer.9 | Barist.6 | min | target | verdict |
+| Gate (identical sets for both models; heldout2 = full 91-row set, train purged of >0.8 5-gram overlaps) | Censer.9 | Barist.7 | min | target | verdict |
 | --- | --- | --- | --- | --- | --- |
-| heldout2_model_only | 52/75 | 51/75 | ==c9 | 0.85 | FAIL |
-| heldout2_with_prefilter | 65/75 | 67/75 | ==c9 | 0.95 | PASS |
+| heldout2_model_only | 52/75 | 53/75 | ==c9 | 0.85 | PASS |
+| heldout2_with_prefilter | 66/75 | 69/75 | ==c9 | 0.95 | PASS |
 | heldout2_benign_fp | 7/16 | 5/16 | 2/15 | 1/15 | FAIL |
-| cs_benign_fpr_raw | 0.2783 | 0.0652 | 0.05 | 0.03 | FAIL |
-| cs_benign_fpr@cs_thr | 0.2783 | 0.0652 | 0.05 | 0.03 | FAIL |
-| hardneg_fp | 6/44 | 5/44 | 3/44 | 1/44 | FAIL |
+| cs_benign_fpr_raw | 0.2783 | 0.0783 | 0.05 | 0.03 | FAIL |
+| cs_benign_fpr@cs_thr | 0.2783 | 0.0783 | 0.05 | 0.03 | FAIL |
+| hardneg_fp | 6/44 | 6/44 | 3/44 | 1/44 | FAIL |
 | train_must_catch | 84/88 | 81/88 | 84/88 | 86/88 | FAIL |
-| test_f1 | 0.8239 | 0.822 | 0.83 | 0.849 | FAIL |
-| test_recall | 0.7987 | 0.7935 | 0.8 | 0.83 | FAIL |
-| test_precision | 0.8508 | 0.8527 | 0.85 | 0.86 | PASS |
-| user_benign_fp | 35/43 | 14/43 | 3/43 | 1/43 | FAIL |
-| ece_calibrated | 0.018413447943885906 | 0.021661004990066318 | 0.035 | 0.03 | PASS |
+| test_f1 | 0.8239 | 0.8225 | 0.83 | 0.849 | FAIL |
+| test_recall | 0.7987 | 0.7961 | 0.8 | 0.83 | FAIL |
+| test_precision | 0.8508 | 0.8508 | 0.85 | 0.86 | PASS |
+| user_benign_fp | 35/43 | 13/43 | 3/43 | 1/43 | FAIL |
+| ece_calibrated | 0.018413447943885906 | 0.019092221225696003 | 0.035 | 0.03 | PASS |
 | onnx_max_abs_diff | None | 0.0 | 0.001 | 0.0001 | PASS |
 | regex_gate_hard_fp | None | 0 | 0 | 0 | PASS |
 | heldout2_dedup_max_overlap | None | 0.75 | 0.8 | 0.5 | PASS |
-| heldout3_model_only | 32/50 | 33/50 | ==c9 | 0.85 | PASS |
-| heldout3_with_prefilter | 34/50 | 36/50 | ==c9 | 0.95 | PASS |
-| identity_fp | 0.6364 | 0.2273 | 0.02 | 0.0 | FAIL |
-| cat_recall_sexual_abuse | 0.0 | 0.0 | 0.8 | 0.9 | FAIL |
-| cat_recall_self_harm | 0.0 | 0.0 | 0.8 | 0.9 | FAIL |
-| identity_recall | 0.7083 | 0.625 | 0.9 | 0.95 | FAIL |
+| heldout3_model_only | 32/50 | 34/50 | ==c9 | 0.85 | PASS |
+| heldout3_with_prefilter | 37/50 | 40/50 | ==c9 | 0.95 | PASS |
+| identity_fp | 0.6364 | 0.3182 | 0.02 | 0.0 | FAIL |
+| cat_recall_sexual_abuse | 0.75 | 0.75 | 0.8 | 0.9 | FAIL |
+| cat_recall_self_harm | 0.5714 | 0.5714 | 0.8 | 0.9 | FAIL |
+| identity_recall | 0.875 | 0.875 | 0.9 | 0.95 | FAIL |
 
 Honest statement (Barist.2): heldout2 is the FULL 91-row set (75 unsafe + 16 benign);
 the 20 train rows with >0.8 5-gram overlap were purged from TRAIN, not from the test

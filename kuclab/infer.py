@@ -15,7 +15,7 @@ CAT_PRIORITY = ["sexual_abuse", "self_harm", "violence", "weapons_explosives", "
 def _cat_rank(c: str) -> int:
     return CAT_PRIORITY.index(c) if c in CAT_PRIORITY else 99
 
-from .langdetect import detect_lang, must_catch_hit, review_hit, is_support_context, SUPPORT_LINK
+from .langdetect import detect_lang, must_catch_hit, review_hit, is_support_context, identity_positive, SUPPORT_LINK
 
 
 @dataclass
@@ -82,8 +82,9 @@ class SafetyModel:
         help_ctx = is_support_context(text)
         support = help_ctx or "self_harm" in hit
         cat_scores = dict(zip(cats, row[2:])) if cats else {}
-        if self.category_block and cats and "self_harm" in cats and cat_scores["self_harm"] >= 0.2:
-            support = True  # model-based support routing only when the head is trusted
+        # Barist.7: model self_harm >= 0.3 -> needs_support (never a block by itself)
+        if cats and "self_harm" in cats and cat_scores["self_harm"] >= 0.3:
+            support = True
         # Hard block: sexual_abuse / self_harm >= 0.3 blocks regardless of language threshold
         # (0.3 is a BLOCK decision only, not a label threshold).
         # Barist.5: gated behind category_block flag (head recall gate, default OFF).
@@ -95,6 +96,8 @@ class SafetyModel:
         if help_ctx and not hit and not cat_block:
             # help-seeking context (e.g. "jak pomoct kamarádovi…") is NEVER blocked
             is_unsafe = False
+        if identity_positive(text) and not hit:
+            is_unsafe = False  # Barist.7: identity-positive waiver
         flagged = None
         if cats and is_unsafe:
             _fired = [c for c, p in zip(cats, row[2:]) if p >= self.threshold]

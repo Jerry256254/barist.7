@@ -134,7 +134,7 @@ def bench_hf_model(repo, texts, device, batch_size=64):
     }
 
 
-def bench_censer(texts, device, ckpt_path=None, tok_dir=None, label="KucLab/Barist.6 (this work)"):
+def bench_censer(texts, device, ckpt_path=None, tok_dir=None, label="KucLab/Barist.7 (this work)"):
     from kuclab.evaluate import predict_proba
     from kuclab.model import KucLabCneser, ModelConfig
     from kuclab.tokenizer import KucTokenizer

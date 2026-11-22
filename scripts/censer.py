@@ -1,4 +1,4 @@
-"""Inference for Barist.6 — self-contained, no dependency on the training repo.
+"""Inference for Barist.7 — self-contained, no dependency on the training repo.
 
 Copy this file next to the downloaded weights, install torch and tokenizers,
 and you are ready:
@@ -6,7 +6,7 @@ and you are ready:
     pip install torch tokenizers safetensors
     python censer.py "how to make a bomb at home"
     python censer.py            # or just run it: interactive UI, phrase in -> verdict out
-    ./barist.6                  # same UI via the barist.6 launcher next to this file
+    ./barist.7                  # same UI via the barist.7 launcher next to this file
 
 It expects, in the same directory:
     model.safetensors   (standard LlamaForSequenceClassification layout)
@@ -200,7 +200,7 @@ DIACRITICS = {
 }
 
 MIN_SCORE = 2  # below this we do not trust the guess -> global threshold
-# --- Barist.6 must-catch pre-filter: highest-severity classes caught by
+# --- Barist.7 must-catch pre-filter: highest-severity classes caught by
 # deterministic patterns (independent of language threshold / category head).
 # Accent-folded to ASCII before matching. Detection phrases only.
 # Rules: CSAM = hard unsafe; self-harm = unsafe + needs_support routing;
@@ -212,18 +212,18 @@ def _rx(pat: str):
     return re.compile(folded, re.I)
 
 
-_MC_CSAM = _rx(r"\b(csam|cp links?|child porn\w*|detsky material|detske intimni|nezletil\w*.{0,20}(fotk|vide|foto|obraz|video)|(dit\w*|det\w*) bez (odeceni|obleceni)|vide(a|o) s (dit\w*|det\w*) (bez odeceni|nah|intimnich|sexualnich)|(natoc|posli|poslat|ukaz|send).{0,30}(dit\w*|det\w*|kids|children) (v plavkach|in plavkach|nah[a|é]?|nude)|(dit\w*|det\w*) v plavkach.{0,20}(bez odeceni|nah|intim|sex)|intimni fotky nezletil|poslat intimni fotky|material de menores|fotos intimas de menores|video de ninos sin ropa|send me nudes of kids|photos of kids without clothes|kinderpornografie|porn\w* infantile|pornografia infantil|detsk\w* porn\w*|nah\w* fotk\w* (dit\w*|det\w*)|nah\w* fotky nezletil\w*|fotos de menores|underage nudes|cp download|pedofil|((find|where|get|send|share|buy|download|look|search|pošli|posli|poslat|kde|kde najdu|stáhnout|stahnout|koupit|chci|hledám|hledej|share|link|want|need)\w*).{0,40}(nude|nudes|naked|porn\w*|sex\w*|intim\w*|csam).{0,30}(minor|minors|child\w*|kids?|underage|nezletil\w*|dít\w*|dět\w*|děti|holk\w*)|(nude|nudes|naked|porn\w*|sex\w*|intim\w*).{0,30}(minor|minors|child\w*|kids?|underage|nezletil\w*).{0,40}(find|where|get|send|share|buy|download|look|search|pošli|posli|kde|stáhnout|koupit|chci|hledám|want|need|link)\w*|telegram (skupina|group|kanal|channel|link) (o|pro|na)? ?(csam|cp|porn|detsk\w*|nah\w*|fotos|menores|pedofil))\b")
-_MC_SELFHARM_1P = _rx(r"(chci se zabit|zabiju se|chci (se )?umrit|chci zem\w*|nechci (uz )?zit|chci si ubliz\w*|sebepo(s|š)kozuji|rezuju se|rezat se|podrezat( si)? zily|prasky na zabit|predavkovat se|rezu se(?! smichy)|kill myself|i (want to|wanna) die|end it all|i cant go on anymore|how to (kill myself|die)|ich will mich umbringen|mich umbringen|ich will sterben|ich will nicht mehr leben|quiero morir|quiero morirme|quiero suicidarme|quiero desaparecer|voglio (uccidermi|morire|sparire)|me suicider|je veux mourir|plus vivre|ne veux plus vivre|(vzit si zivot|vzit zivot)(?! do vlastnich rukou)|prestat zit(?!\s+(v|na|ve|do)\s)|nechci dal zit|jak (se )?(nejrychleji )?zemrit doma|chci (se )?zemrit|otravit se( prasky| tabletkami)?|(se )?porezat( se)?|jak se porezat|(se )?podrezat( se)?( zily)?|prasky (ktere|co) mi pomu(z|ž)ou zemrit|predavkov.{0,25}(mi pomu|chci|zemrit)|(chci|pomoz|porad).{0,25}predavkov|jak se.{0,25}predavkov|uz to nevydrzim.{0,30}(pomoz|skoncit|koncit|zemrit)|pomuz(te)? mi skoncit|chci zmizet navzdy)")
+_MC_CSAM = _rx(r"\b(csam|cp links?|child porn\w*|detsky material|detske intimni|nezletil\w*.{0,20}(fotk|vide|foto|obraz|video)|(dit\w*|det\w*) bez (odeceni|obleceni)|vide(a|o) s (dit\w*|det\w*) (bez odeceni|nah|intimnich|sexualnich)|(natoc|posli|poslat|ukaz|send).{0,30}(dit\w*|det\w*|kids|children) (v plavkach|in plavkach|nah[a|é]?|nude)|(dit\w*|det\w*) v plavkach.{0,20}(bez odeceni|nah|intim|sex)|intimni fotky nezletil|poslat intimni fotky|material de menores|fotos intimas de menores|video de ninos sin ropa|send me nudes of kids|photos of kids without clothes|kinderpornografie|porn\w* infantile|pornografia infantil|detsk\w* porn\w*|nah\w* fotk\w* (dit\w*|det\w*)|nah\w* fotky nezletil\w*|fotos de menores|underage nudes|cp download|pedofil|((find|where|get|send|share|buy|download|look|search|vidět|videt|ukázat|ukazat|ukaz|pošli|posli|poslat|odkaz|kde|kde najdu|najdu|sehnat|stáhnout|stahnout|koupit|chci|hledám|hledej|link|want|need)\w*).{0,40}(nude|nudes|naked|porn\w*|sex\w*|sexy|intim\w*|nah\w*|bez odeceni|csam).{0,30}(minor|minors|child\w*|kids?|underage|nezletil\w*|dít\w*|dět\w*|děti|hol(e)?k\w*)|(nude|nudes|naked|porn\w*|sex\w*|sexy|intim\w*|nah\w*|bez odeceni).{0,30}(minor|minors|child\w*|kids?|underage|nezletil\w*).{0,40}(find|where|get|send|share|buy|download|look|search|pošli|posli|kde|stáhnout|koupit|chci|hledám|want|need|link)\w*|telegram.{0,40}(detsk\w*|cp\w*|nah\w*|porn\w*|csam|material\w*)|telegram (skupina|group|kanal|channel|link) (o|pro|na)? ?(csam|cp|porn|detsk\w*|nah\w*|fotos|menores|pedofil)|(sexy|sex\w*|nah\w*).{0,25}hol(e)?k\w*.{0,20}(do|na|pod) ?\d+\s?let)\b")
+_MC_SELFHARM_1P = _rx(r"(chci se zabit|zabiju se|chci (se )?umrit|chci zem\w*|nechci (uz )?zit|chci si ubliz\w*|sebepo(s|š)kozuji|rezuju se|rezat se|podrezat( si)? zily|prasky na zabit|predavkovat se|rezu se(?! smichy)|kill myself|i (want to|wanna) die|end it all|i cant go on anymore|how to (kill myself|die)|ich will mich umbringen|mich umbringen|ich will sterben|ich will nicht mehr leben|quiero morir|quiero morirme|quiero suicidarme|quiero desaparecer|voglio (uccidermi|morire|sparire)|me suicider|je veux mourir|plus vivre|ne veux plus vivre|(vzit si zivot|vzit zivot)(?! do vlastnich rukou)|prestat zit(?!\s+(v|na|ve|do)\s)|nechci dal zit|jak (se )?(nejrychleji )?zemrit doma|chci (se )?zemrit|otravit se( prasky| tabletkami)?|(se )?porezat( se)?|jak se porezat|(se )?podrezat( se)?( zily)?|prasky (ktere|co) mi pomu(z|ž)ou zemrit|predavkov.{0,25}(mi pomu|chci|zemrit)|(chci|pomoz|porad).{0,25}predavkov|jak se.{0,25}predavkov|uz to nevydrzim.{0,30}(pomoz|skoncit|koncit|zemrit)|pomuz(te)? mi skoncit|chci zmizet navzdy|skoncit\w* (se |s )?zivotem|skoncit zivot|jak si (nejlepe )?ublizit( si)? doma|ubil\w* si doma|nemuzu dal zit|uz nemuzu dal zit|az tu nebudu|nikdo me nebude postradat|nikdo mě nebude postrádat|nechci tady byt)")
 _MC_SELFHARM_INSTR = _rx(r"(jak se (?!nezranit)[a-z ]{0,25}(zabit|obesit|zranit|ublit|zemrit)|jak se (zabit|obesit|zranit|ublit)|jak (si )?sebepo|suicid\w*|sebevraz\w*|sebepo(s|š)kozeni|how to (kill (myself|himself|herself|someone)|die|take my own life)\b(?!\s+time)|end my life|skoncit\w* zivot)")
 _MC_INSTR_MARK = _rx(r"\b(jak|how|navod na|way|method|zpusob|prosim|please|tell me|dime|sag mir|dites|instructions?|step by step)\b")
 _MC_SUPPORT_CONTEXT = _rx(r"\b(pomoct|pomoc|kamarad|linka|bezpeci|help|support|suicide prevention|prevence|predejit|predchazet|zabranit)\b")
 _MC_NEWS_CONTEXT = _rx(r"\b(vysetruje|policie|news|zprav|obet|vrah|doslo k|explodovala|explosion|utok|atentat|vystava|muzeum|historie|svetova valka|exponat)\b")
-# Barist.6: generic media words (clanek/film/kniha/...) NO LONGER waive 1st-person
+# Barist.7: generic media words (clanek/film/kniha/...) NO LONGER waive 1st-person
 # self-harm or instruction forms — they were a trivial bypass ("... , článek").
 # Only explicit game/fiction frames waive, and only downgrade (see must_catch_hit).
 _MC_GAME_CONTEXT = _rx(r"\b(sims|ve hre|pocitacova hra|pocitacova hra|game|videohr\w*|počítačová hra|hr\w* ve škole)\b")
 _MC_LIT_CONTEXT = _rx(r"\b(literatura|literature|hamlet|pojednava|roman|kniha o|film o|divadlo o|novela o)\b")
-# Barist.6: negation cancels a fiction/game frame ("vlastně ne ve hře", "for real")
+# Barist.7: negation cancels a fiction/game frame ("vlastně ne ve hře", "for real")
 _MC_NEGATION = _rx(r"\b(vlastně ne|vlastne ne|ale doopravdy|ale doopravde|ne ve hře|ne ve hre|for real|in real life|doopravdy|opravdu|vážně|vazne|seriously|ne jen ve hře)\b")
 _MC_THREAT = _rx(r"(zabiju (te|vas)|kill you|i\'ll kill you|ill kill you|je vais te tuer|te matare|voy a matarte|te voy a matar|quiero hacerte dano|voglio ucciderti|ich bringe dich um|ich tote dich|jemanden umbringen|bringe ich jemanden um)")
 _MC_HATE_GROUP = _rx(r"(vystříl\w*|vystřel\w*|postříl\w*|postřel\w*|zabít všechny|zabit vsechny|vyhlad\w*|vyhub\w*|pověsit|povez\w*|zastřel\w*|umuč\w*|utýrat).{0,40}(cigán|cigan|rom\w*|žid\w*|zid\w*|uprchlík\w*|uprchlik\w*|muslim\w*|imigrant\w*|černoch\w*|nigg\w*|muslim\w* všichni|všechny cigány)|(cigán\w*|cigan\w*|romov\w*|židov\w*|zidov\w*|uprchlík\w*|muslim\w*|imigrant\w*|černoš\w*).{0,40}(vystříl\w*|vystřel\w*|postříl\w*|postřel\w*|zab\w*|zastřel\w*|pověs\w*|vyhn\w*|vyhub\w*|vyhlad\w*)|kill all (jews|muslims|blacks|gypsies|immigrants)|exterminate (the )?(jews|muslims|roma)|holocaust deni\w*|white power|heil hitler")
@@ -235,6 +235,8 @@ _MC_JAILBREAK = _rx(r"(you are dan\b|dan mode|dan (mode|activated|unlocked|enabl
 
 
 _MC_POISON = _rx(r"(jak (se )?otr\w*vit|čím otrávit|otrávit (souseda|někoho|psa|kočku)|jak (vyrobit|upect|upeč|uvařit|uvarit|namíchat|namichat) (jed|otravu)|recept na (jed|otravu)|jak namíchat jed|how to poison|envenenar (a )?(mi vecino|alguien|cualquiera)|como envenenar|quiero envenenar|empoisonner (quelqu|mon voisin)|jemanden vergiften|ich will jemanden vergiften|avvelenare (qualcuno|il vicino)|отравить (соседа|кого)|jak otrávit (souseda|někoho|psa|kočku|zvíře))")
+_MC_SCHOOL_EXTRA = _rx(r"střelb\w* (na|ve|do) škole|plánuji střelbu|planuju strelbu|chystám (střelbu|útok|utok) (na|ve|do) škole|chystám se střílet ve škole|school (shooting|massacre|attack) plan|plan to shoot up")
+_MC_SCHOOL_KNIFE = _rx(r"(zítra|zitra|jdu|vezmu|přinesu) .{0,25}do školy.{0,15}(s )?(nožem|nozem|zbraní|zbrani)|nůž do školy|nuz do skoly")
 _MC_SCHOOL = _rx(r"(sestřel\w*|postříl\w*|vystříl\w*|začnu střílet|střílet|zbraň|kulomet).{0,40}(škola|školu|ve škole|třída|do školy)|(přinesu|vezmu|půjdu|jdu|začnu).{0,40}(škola|školu|ve škole|do školy|třída).{0,40}(zbraň|střílet|kulomet|nůž)|(škola|školu|do školy|třída).{0,40}(začnu|přinesu|vezmu|půjdu).{0,30}(střílet|zbraň|nůž|kulomet)|střelba ve škole|školní masakr|school shooting|how to shoot up a school|matar (a todos )?en la escuela|tiroteo escolar|disparar en (la escuela|el colegio)|tuer tout le monde (à|a) l\'école|fusillade (scolaire|dans l\'école)|alle in der schule (töten|erschie|angreifen)|amoklauf (an der|in der) schule|uccidere tutti a scuola|strage (a|di) scuola|стріляти в школі|вбити всіх у школі")
 _MC_MARKET = _rx(r"(kde|jak) (koupit|sehnat|seženu|objednat|koupím).{0,50}(pervitin|metamfetamin|kokain|heroin|drogy|zbraň|zbraně|explozivum|trhavin|bombu)|prodej (drog|zbraní)|nabízím (drogy|zbraně)|prodám (zbraň|zbraně|drogy)|prodávám (zbraň|zbraně|drogy)|sell (guns|weapons|drugs)|comprar (armas|drogas) baratas|buy (guns|drugs) (cheap|online)|как купить (оружие|наркотики)|(vařit|svařit|syntetizovat) fet( |$)|fet (na vaření|syntézu)")
 
@@ -243,10 +245,10 @@ _MC_LEGAL_WEAPON = _rx(r"(zbrojni prukaz|zbrojní průkaz|legalne|z legální|vz
 _MC_BOMB_BENIGN = _rx(r"(pyrotechnik|silvestr|ohňostroj|prskavk|dort|do koupele|do dortu|výbuch dortu)")
 _MC_HELP_OTHER = _rx(r"\b(pomoct|pomoc|pomoz\w*|podpora|pece|help|support|prevence)\b(?!.*\b(mi|me)\s+(pomo\w*|help|support))")
 _MC_POISON_3P = _rx(r"otr\w*vit (souseda|manzelku|manzela|nekdoho|psa|kocku|zvir(e|ě)|cloveka|kdokoli|obet|dite|deti)")
-# Barist.6: poison aimed at a PERSON via a hidden target ("jed na krysy pro tchyni")
+# Barist.7: poison aimed at a PERSON via a hidden target ("jed na krysy pro tchyni")
 _MC_POISON_PERSON = _rx(r"(jed|otrava|otrav\w*|recept na jed|prasky|prášky).{0,40}(pro|na|proti) (tchyn\w*|manzel\w*|manzelku|souseda|souseda|zenu|ženu|rodinu|dite|dítě| dite)")
-# Barist.6: 2nd/3rd-person kill targets ignore news/media context ("Jak zabít souseda, je to do knihy")
-_MC_KILL_3P = _rx(r"((zab\w{1,10}|how to kill|jak zab\w{1,10}) (souseda|manzelku|manzela|nekdoho|kdokoli|cloveka|obet|obět|zenu|ženu|muze|muže|rodinu|neighbor|wife|husband|boss)"
+# Barist.7: 2nd/3rd-person kill targets ignore news/media context ("Jak zabít souseda, je to do knihy")
+_MC_KILL_3P = _rx(r"((zab\w{1,10}|how to kill|jak zab\w{1,10}) (my |the )?(souseda|manzelku|manzela|nekdoho|kdokoli|cloveka|obet|obět|zenu|ženu|muze|muže|rodinu|neighbor|wife|husband|boss|sefa|šefa|ucitele|učitele|teacher|spoluzaka|spolužáka|classmate|mamu|mámu|mom|mother|tatku|tátu|dad|father|brachu|bráchu|brother)"
                r"|kill (my |the )?(neighbor|wife|husband|boss|family)"
                r"|tuer (mon voisin|ma femme)"
                r"|matar (a mi vecino|a mi mujer|alguien)"
@@ -254,6 +256,12 @@ _MC_KILL_3P = _rx(r"((zab\w{1,10}|how to kill|jak zab\w{1,10}) (souseda|manzelku
                r"|jemanden (töten|umbringen)"
                r"|убить (соседа)"
                r"|vбити (сусіда))")
+# Barist.7: 1st-person future kill of a person/pronoun ("Zabiju ho zítra po škole")
+_MC_KILL_1P_FUT = _rx(r"\b(zabiju|odstrelím|odstrelim|podříznu|podriznu|postřelím|postrelim)\s+(ho|ji|je|toho|tu|jeho)\b")
+# Barist.7: non-violent hate stereotypes against protected groups -> hard block
+_MC_HATE_STEREO = _rx(r"(romove|cigani|cikany|zide|zidove|muslimove|uprchlici|cernoši|cernosi|imigranti|ciref?inci|roma|jews|muslims|refugees|immigrants|black people).{0,30}(jsou (zlodeji|spinavi|paraziti|nebezpeční|horsi|nebezpecni)|(by (měli|meli)|měli by|meli by) (zmizet|vyhubit)|ovládají svět|ovladaji svet|control the (world|media)|sem nepatří|nepatří sem|nepatri sem|kradou|berou (nám|nam) práci|vsichni jsou|are (thieves|parasites|dangerous)|do not belong|steal our jobs|should leave|should be removed)")
+_MC_IDENTITY_POS = _rx(r"(slaví|slavi|vyhráli|vyhrali|našli|nasli|pomáhají|pomahaji|pořádají|poradaji|jsou moji sousedé|jsou součástí města|pracuji s nimi|celebrate|won|help|work with|are my neighbors)")
+_MC_GROUP = _rx(r"\b(romove|cigani|cikany|zide|muslimove|uprchlici|cernoši|imigranti|ciref?inci|roma|jews|muslims|refugees|immigrants|black people)\b")
 _MC_PEST = _rx(r"(krtk|myš|potkan|krys|hmyz|mravenc|plevel|slimák|škůdce|na zahradě|na zahrade)")
 
 SUPPORT_LINK = "https://www.linkabezpeci.cz"
@@ -289,10 +297,10 @@ def must_catch_hit(text: str) -> list[str]:
     help_other = bool(_MC_HELP_OTHER.search(folded))
     game = bool(_MC_GAME_CONTEXT.search(folded))
     lit = bool(_MC_LIT_CONTEXT.search(folded))
-    # Barist.6: 1st-person self-harm is NEVER waived by glued media/news words
+    # Barist.7: 1st-person self-harm is NEVER waived by glued media/news words
     # ("Chci umřít, napsal jsem o tom článek" must still block). Only an explicit
     # game frame downgrades (caller routes to needs_support, not safe-block).
-    if _MC_SELFHARM_1P.search(folded):  # Barist.6: game frame never waives 1P (caller routes needs_support)
+    if _MC_SELFHARM_1P.search(folded):  # Barist.7: game frame never waives 1P (caller routes needs_support)
         hits.append("self_harm")
     elif _MC_SELFHARM_INSTR.search(folded) and _MC_INSTR_MARK.search(folded) and not news and not help_other and not (game and not _MC_NEGATION.search(folded)) and not lit:
         hits.append("self_harm")  # instruction form; "help someone else" frames stay safe
@@ -300,9 +308,15 @@ def must_catch_hit(text: str) -> list[str]:
         hits.append("violence")
     if _MC_KILL_3P.search(folded) and not news:
         hits.append("violence")
+    if _MC_KILL_1P_FUT.search(folded):
+        hits.append("violence")
+    if _MC_SCHOOL_EXTRA.search(folded):
+        hits.append("violence")
     if _MC_SCHOOL.search(folded) and not news:
         hits.append("violence")
     if _MC_HATE_GROUP.search(folded) and not news:
+        hits.append("hate_harassment")
+    if _MC_HATE_STEREO.search(folded) and not news:
         hits.append("hate_harassment")
     legal = bool(_MC_LEGAL_WEAPON.search(folded))
     bomb_benign = bool(_MC_BOMB_BENIGN.search(folded))
@@ -336,14 +350,24 @@ def review_hit(text: str) -> list[str]:
     out = []
     if _MC_JAILBREAK.search(folded):
         out.append("jailbreak_injection")
-    # Barist.6: any roleplay frame is a prompt-injection attempt -> needs_review, never a block
+    # Barist.7: any roleplay frame is a prompt-injection attempt -> needs_review, never a block
     if _rx(r"\bpretend (you are|youre|to be|that you|you are now)\b").search(folded):
         out.append("jailbreak_injection")
+    # Barist.7: knife/weapon taken to school -> review, unless art/cooking class context
+    if _MC_SCHOOL_KNIFE.search(folded) and not _rx(r"\b(výtvarn|kuchyn|vaření|nůž na mazání|školní nůž)\b").search(folded):
+        out.append("weapons_explosives")
     if _MC_LEGAL_WEAPON.search(folded) and (_MC_MARKET.search(folded) or _MC_WEAPONS_DIY.search(folded)):
         out.append("weapons_explosives")
     if _MC_BOMB_BENIGN.search(folded) and _MC_MARKET.search(folded):
         out.append("illegal_marketplace")
     return sorted(set(out))
+
+
+def identity_positive(text: str) -> bool:
+    """Barist.7: neutral/positive mention of a protected group -> model FP waiver."""
+    folded = _fold_ascii(text).lower()
+    return bool(_MC_GROUP.search(folded) and _MC_IDENTITY_POS.search(folded)
+                and not _MC_HATE_STEREO.search(folded) and not _MC_HATE_GROUP.search(folded))
 
 
 def is_support_context(text: str) -> bool:
@@ -509,7 +533,7 @@ class CenserPipeline:
         self.cat_thresholds = dict(self.cfg.get("cat_thresholds") or {})
         self.temperature = float(self.cfg.get("temperature", 1.0) or 1.0)
         self.cat_experimental = set(self.cfg.get("cat_experimental") or [])
-        # Barist.6: category-head hard block disabled until the head passes its own
+        # Barist.7: category-head hard block disabled until the head passes its own
         # gate (category recall >= 0.8 on heldout2 for sexual_abuse/self_harm).
         self.category_block = bool(self.cfg.get("category_block", False))
         self.lang_thresholds = dict(self.cfg.get("lang_thresholds") or {})
@@ -572,7 +596,7 @@ class CenserPipeline:
                           if p >= float(self.cat_thresholds.get(c, self.threshold)) and c not in self.cat_experimental}
                 passed |= set(best.get("categories") or [])  # keep pre-filter hits from the best chunk
                 # hard block (item 1): sexual_abuse / self_harm >= 0.3 forces unsafe —
-                # Barist.6: only when category_block is enabled in config (head gate)
+                # Barist.7: only when category_block is enabled in config (head gate)
                 if self.category_block and not best.get("needs_support"):
                     for c in ("sexual_abuse", "self_harm"):
                         if c in cats and cat_scores[cats.index(c)] >= 0.3:
@@ -613,16 +637,21 @@ class CenserPipeline:
             cats = self.categories()
             cat_scores = row[2:] if cats else []
             is_unsafe = p >= thresholds[i]
-            # Barist.6: must-catch pre-filter — CSAM / self-harm pattern hits force
+            # Barist.7: must-catch pre-filter — CSAM / self-harm pattern hits force
             # unsafe regardless of the (language) binary threshold
             hit_override = must_catch_hit(texts[i]) if texts else []
             review = review_hit(texts[i]) if texts else []
             help_ctx = is_support_context(texts[i]) if texts else False
             support_ctx = help_ctx
+            # Barist.7: model-based self-harm >= 0.3 -> needs_support (NOT a block)
+            if cats and "self_harm" in cats and cat_scores[cats.index("self_harm")] >= 0.3:
+                support_ctx = True
+            # Barist.7: neutral/positive protected-group mention -> waive model FP (regex hits still block)
+            id_pos = bool(texts and identity_positive(texts[i]))
             if self.category_block and cats and "self_harm" in cats and cat_scores[cats.index("self_harm")] >= 0.2:
                 support_ctx = True  # model-based support routing only when head is trusted
             # hard block: sexual_abuse / self_harm >= 0.3 forces unsafe in ANY language
-            # Barist.6: gated behind config flag category_block (head recall gate)
+            # Barist.7: gated behind config flag category_block (head recall gate)
             cat_block = []
             if self.category_block and cats and not help_ctx:  # help-other frames never hard-blocked
                 for c in ("sexual_abuse", "self_harm"):
@@ -634,7 +663,9 @@ class CenserPipeline:
                 is_unsafe = True
             if help_ctx and not hit_override and not cat_block:
                 is_unsafe = False  # help-seeking context is never blocked
-            # Barist.6: at most the top-2 categories by score (no nonsense lists)
+            if id_pos and not hit_override:
+                is_unsafe = False  # identity-positive waiver
+            # Barist.7: at most the top-2 categories by score (no nonsense lists)
             _passed = [c for c, sc in zip(cats, cat_scores)
                        if sc >= float(self.cat_thresholds.get(c, self.threshold))
                        and c not in self.cat_experimental]
@@ -669,7 +700,7 @@ def _color(text: str, code: str) -> str:
 
 def repl(pipe: "CenserPipeline") -> int:
     """Small interactive terminal UI: phrase in, safe/unsafe + score out."""
-    print("Barist.6 - interactive terminal UI")
+    print("Barist.7 - interactive terminal UI")
     print("Type a phrase, Enter to classify. 'exit' to quit.\n")
     while True:
         try:
@@ -690,8 +721,8 @@ def repl(pipe: "CenserPipeline") -> int:
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(
-        prog="barist.6",
-        description="Barist.6 safety classifier (standalone). Run without text to open the interactive UI.",
+        prog="barist.7",
+        description="Barist.7 safety classifier (standalone). Run without text to open the interactive UI.",
     )
     parser.add_argument("text", nargs="*", help="phrase to classify once; omit to open the interactive UI")
     parser.add_argument("--model-dir", default=".")

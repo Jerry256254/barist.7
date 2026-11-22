@@ -14,19 +14,19 @@ CAT_PRIORITY = ["sexual_abuse", "self_harm", "violence", "weapons_explosives", "
 def _cat_rank(c: str) -> int:
     return CAT_PRIORITY.index(c) if c in CAT_PRIORITY else 99
 
-from .langdetect import detect_lang, must_catch_hit, review_hit, is_support_context, SUPPORT_LINK
+from .langdetect import identity_positive, detect_lang, must_catch_hit, review_hit, is_support_context, SUPPORT_LINK
 
 
 
 
 
-BANNER = "Barist.6 - napis text, Enter. 'exit' pro konec."
+BANNER = "Barist.7 - napis text, Enter. 'exit' pro konec."
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="barist.6",
-        description="Barist.6: tiny multilingual safety classifier. Prints safe or unsafe.",
+        prog="barist.7",
+        description="Barist.7: tiny multilingual safety classifier. Prints safe or unsafe.",
     )
     parser.add_argument("text", nargs="*", help="text to classify; omit to read stdin or use --repl")
     parser.add_argument("--checkpoint", default="checkpoints/best.pt")
@@ -63,7 +63,7 @@ def _color(text: str, code: str) -> str:
 class HubClassifier:
     """The published model from the Hub, loaded with plain transformers."""
 
-    def __init__(self, repo: str = "KucLab/Barist.6", device: str | None = None) -> None:
+    def __init__(self, repo: str = "KucLab/Barist.7", device: str | None = None) -> None:
         import torch
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
@@ -92,7 +92,7 @@ class HubClassifier:
         thr = float(lang_thr.get(lang, lang_thr.get("default", 0.5)))
         label = "unsafe" if p >= thr else "safe"
         cats = []
-        hit = must_catch_hit(text)  # Barist.6 hard pre-filter
+        hit = must_catch_hit(text)  # Barist.7 hard pre-filter
         if hit:
             label = "unsafe"
         help_ctx = is_support_context(text)
@@ -102,20 +102,23 @@ class HubClassifier:
             id2label = self.model.config.id2label
             cat_thr = getattr(self.model.config, "cat_thresholds", None) or {}
             cat_exp = set(getattr(self.model.config, "cat_experimental", []) or [])
-        cat_block_enabled = bool(getattr(self.model.config, "category_block", False))  # Barist.6: default OFF until head gate
+        cat_block_enabled = bool(getattr(self.model.config, "category_block", False))  # Barist.7: default OFF until head gate
         if n_labels > 2:
             if cat_block_enabled and not help_ctx:  # hard block only when head gate passed; help-other never blocked
                 for i in range(2, n_labels):
                     if id2label[i] in ("sexual_abuse", "self_harm") and float(probs[i]) >= 0.3:
                         cat_block.append(id2label[i])
-            if cat_block_enabled and n_labels > 2 and "self_harm" in id2label.values():
+            # Barist.7: model self_harm >= 0.3 -> needs_support (not a block)
+            if n_labels > 2 and "self_harm" in id2label.values():
                 i_sh0 = [i for i, v in id2label.items() if v == "self_harm"][0]
-                if float(probs[i_sh0]) >= 0.2:
+                if float(probs[i_sh0]) >= 0.3:
                     support = True
             if cat_block:
                 label = "unsafe"
             if help_ctx and not hit and not cat_block:
                 label = "safe"  # help-seeking context is never blocked
+            if identity_positive(text) and not hit:
+                label = "safe"  # Barist.7: identity-positive waiver
             if label == "unsafe":
                 fired = [(float(probs[i]), id2label[i]) for i in range(2, n_labels)
                          if float(probs[i]) >= float(cat_thr.get(id2label[i], 0.5)) and id2label[i] not in cat_exp]
@@ -137,7 +140,7 @@ class HubClassifier:
 
 def run_ui(predict, source: str) -> int:
     """Small interactive terminal UI: phrase in, safe/unsafe + score out."""
-    print(f"Barist.6 - interactive terminal UI  [{source}]")
+    print(f"Barist.7 - interactive terminal UI  [{source}]")
     print("Type a phrase, Enter to classify. 'exit' to quit.\n")
     while True:
         try:
@@ -163,14 +166,14 @@ def run_ui(predict, source: str) -> int:
 
 
 def ui_main(argv: list[str] | None = None) -> int:
-    """Entry point for the `barist.6` command."""
+    """Entry point for the `barist.7` command."""
     parser = argparse.ArgumentParser(
-        prog="barist.6",
-        description="Barist.6 terminal UI: classify text as safe/unsafe (+ categories). "
+        prog="barist.7",
+        description="Barist.7 terminal UI: classify text as safe/unsafe (+ categories). "
         "Run without arguments for the interactive UI.",
     )
     parser.add_argument("text", nargs="*", help="phrase to classify once; omit to open the interactive UI")
-    parser.add_argument("--repo", default="KucLab/Barist.6", help="Hub repo id of the model")
+    parser.add_argument("--repo", default="KucLab/Barist.7", help="Hub repo id of the model")
     parser.add_argument("--checkpoint", default=None, help="use a local training checkpoint instead of the Hub model")
     parser.add_argument("--device", default=None, help="cuda / cpu (default: auto)")
     parser.add_argument("--json", action="store_true", help="one-shot JSON output")

@@ -1,7 +1,7 @@
 [project]
 name = "kuclab-barist4"
 version = "1.0.0"
-description = "Barist.6 - a tiny from-scratch multilingual safety classifier: binary safe/unsafe + 10 categories, 4k context."
+description = "Barist.7 - a tiny from-scratch multilingual safety classifier: binary safe/unsafe + 10 categories, 4k context."
 requires-python = ">=3.12"
 dependencies = [
     "torch>=2.9",
@@ -18,7 +18,7 @@ dev = ["pytest>=8.0"]
 
 [project.scripts]
 kuclab-cneser = "kuclab.cli:main"
-"barist.6" = "kuclab.cli:ui_main"
+"barist.7" = "kuclab.cli:ui_main"
 
 [build-system]
 requires = ["hatchling"]

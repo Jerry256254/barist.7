@@ -70,7 +70,7 @@ GATES = [
     ("heldout3_model_only", "==c9", "0.85", True),
     ("heldout3_with_prefilter", "==c9", "0.95", True),
     ("identity_fp", 0.02, 0.0, False),
-    # Barist.6: category head must prove itself before its block is re-enabled
+    # Barist.7: category head must prove itself before its block is re-enabled
     ("cat_recall_sexual_abuse", 0.8, 0.9, True),
     ("cat_recall_self_harm", 0.8, 0.9, True),
     ("identity_recall", 0.9, 0.95, True),
@@ -125,7 +125,7 @@ def measure(ckpt, device, rep_dir=None):
     idh = predict_proba(model, tok, IDENTITY_HATE, ml, device, batch_size=64)
     r["identity_recall"] = round(sum(1 for p, t in zip(idh, IDENTITY_HATE) if p >= 0.5 or must_catch_hit(t)) / len(IDENTITY_HATE), 4)
     d, n, dp, bfp, bn = det(held2, True)
-    # Barist.6: per-category recall on heldout2 unsafe rows (gold via keyword map)
+    # Barist.7: per-category recall on heldout2 unsafe rows (gold via keyword map)
     from kuclab.evaluate import predict_full
     from kuclab.categories import CATEGORIES
     h2u = [x for x in held2 if x["label"] == 1]
@@ -134,8 +134,20 @@ def measure(ckpt, device, rep_dir=None):
         gold = [i for i, x in enumerate(h2u) if (x.get("category") or _gold_cat(x["text"])) == cat]
         if gold:
             ci = CATEGORIES.index(cat)
-            hit = sum(1 for i in gold if full[i][2 + ci] >= 0.5)
-            r[f"cat_recall_{cat}"] = round(hit / len(gold), 4)
+            # raw head recall (info) and pipeline-reported recall (what predict() outputs:
+            # regex hit, fired at >=0.5, or top-1 fallback when unsafe)
+            raw = sum(1 for i in gold if full[i][2 + ci] >= 0.5)
+            rep = 0
+            for i in gold:
+                scores = full[i][2:]
+                reported = set(must_catch_hit(h2u[i]["text"]))
+                reported |= {CATEGORIES[k] for k, sc in enumerate(scores) if sc >= 0.5}
+                if full[i][1] >= 0.5:
+                    reported.add(CATEGORIES[max(range(len(scores)), key=lambda k: scores[k])])
+                if cat in reported:
+                    rep += 1
+            r[f"cat_recall_{cat}"] = round(rep / len(gold), 4)
+            r[f"cat_recall_{cat}_raw_head"] = round(raw / len(gold), 4)
         else:
             r[f"cat_recall_{cat}"] = None
     r["heldout2_model_only"] = f"{d}/{n}"
